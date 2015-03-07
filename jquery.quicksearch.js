@@ -129,7 +129,7 @@
 				jq_results = jq_results.not(options.noResults);
 			}
 			
-			var t = (typeof options.selector === "string") ? jq_results.find(options.selector) : $(target).not(options.noResults);
+			var t = (typeof options.selector === "string") ? jq_results.find(options.selector) : jq_results;
 			cache = t.map(function () {
 				return e.strip_html(this.innerHTML);
 			});
