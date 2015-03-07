@@ -204,6 +204,12 @@
 				jq_results.not(":hidden").each(function (i) {
 					$(this).removeClass(joined).addClass(options.stripeRows[i % stripeRows_length]);
 				});
+				
+				e.doIfString(options.rowspanselector, function() {
+					jq_results.find(options.rowspanselector).not(":hidden").each(function (i) {
+						$(this).removeClass(joined).addClass(options.stripeRows[i % stripeRows_length]);
+					});
+				});
 			}
 			
 			return this;
