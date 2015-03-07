@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Row-span table</title>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script type="text/javascript" src="../jquery.quicksearch.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function () {
+				$("#id_search").quicksearch("table tbody tr", {
+					noResults: '#noresults',
+					stripeRows: ['odd', 'even'],
+					loader: 'span.loading'
+				});
+			});
+		</script>
+		<link rel="stylesheet" href="style.css" type="text/css" media="all" title="" />
+	</head>
+	<body id="tools">
+		<form action="#">
+			<fieldset>
+				<input type="text" name="search" value="" id="id_search" /> <span class="loading">Loading...</span>
+			</fieldset>
+		</form>	
+		<table id="matrix" cellpadding="0" cellspacing="0">
+			<thead>
+				<tr>
+					<th width="60%">Country</th>
+					<th width="20%">City</th>
+					<th width="10%">Founding</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr id="noresults">
+					<td colspan="3">No Results</td>
+				</tr>
+				<tr>
+					<th rowspan="3">Germany</th>
+					<td>Berlin</td>
+					<td>1237</td>
+				</tr>
+				<tr>
+					<td>Hamburg</td>
+					<td>~600</td>
+				</tr>
+				<tr>
+					<td>Munich</td>
+					<td>1158</td>
+				</tr>
+				<tr>
+					<th rowspan="4">UK</th>
+					<td>Glasgow</td>
+					<td>543</td>
+				</tr>
+				<tr>
+					<td>Liverpool</td>
+					<td>1207</td>
+				</tr>
+				<tr>
+					<td>London</td>
+					<td>121</td>
+				</tr>
+				<tr>
+					<td>Manchester</td>
+					<td>~100</td>
+				</tr>
+				<tr>
+					<th rowspan="4">USA</th>
+					<td>Chicago</td>
+					<td>1833</td>
+				</tr>
+				<tr>
+					<td>New York</td>
+					<td>1624</td>
+				</tr>
+				<tr>
+					<td>San Francisco</td>
+					<td>1776</td>
+				</tr>
+				<tr>
+					<td>Seattle</td>
+					<td>1851</td>
+				</tr>
+			</tbody>
+		</table>
+	</body>
+</html>
