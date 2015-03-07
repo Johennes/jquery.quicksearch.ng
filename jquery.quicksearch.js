@@ -57,7 +57,14 @@
 					
 					options.show.apply(rowcache[i]);
 					
-					e.doIfString(options.rowspanselector, function() {						
+					e.doIfString(options.rowspanselector, function() {
+						// Check if this element has the rowspan
+						var rs = $(rowcache[i]).find(options.rowspanselector);
+						if (rs.length !== 0) {
+							rs.attr("rowspan", parseInt(rs.attr("rowspan")) - 1);
+							return;
+						}
+						
 						// Check if any of the following elements has the rowspan
 						$node = $(rowcache[i]);
 						while (true) {
