@@ -105,7 +105,7 @@
 					});
 				} else {
 					if (options.isHidden(rowcache[i])) {
-						return;
+						continue;
 					}
 						
 					options.hide.apply(rowcache[i]);
