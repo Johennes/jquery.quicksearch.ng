@@ -247,9 +247,21 @@
 				return jq_results.find(options.selector);
 			}) || jq_results;
 			
-			textcache = t.map(function () {
-				return e.strip_html(this.innerHTML);
-			});
+			textcache = [];
+			var rs_text = ""
+			for (var i = 0, len = t.length; i < len; ++i) {
+				var text = t[i].innerHTML;
+				
+				e.doIfString(options.rowspanselector, function() {
+					var rs = $(t[i]).find(options.rowspanselector);
+					if (rs.length !== 0) {
+						rs_text = rs[0].innerHTML;
+					}
+					text = rs_text + text;
+				});
+				
+				textcache.push(e.strip_html(text));
+			}
 			
 			rowcache = jq_results.map(function () {
 				return this;
