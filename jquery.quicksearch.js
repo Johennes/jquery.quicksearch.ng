@@ -1,6 +1,6 @@
 (function($, window, document, undefined) {
+	
 	$.fn.quicksearch = function (target, opt) {
-		
 		var timeout, cache, rowcache, jq_results, val = '', e = this, options = $.extend({ 
 			delay: 100,
 			selector: null,
@@ -35,7 +35,6 @@
 		}, opt);
 		
 		this.go = function () {
-			
 			var i = 0,
 				numMatchedRows = 0,
 				noresults = true, 
@@ -83,7 +82,6 @@
 		};
 		
 		this.stripe = function () {
-			
 			if (typeof options.stripeRows === "object" && options.stripeRows !== null)
 			{
 				var joined = options.stripeRows.join(' ');
@@ -122,7 +120,6 @@
 		};
 		
 		this.cache = function () {
-			
 			jq_results = $(target);
 			
 			if (typeof options.noResults === "string" && options.noResults !== "") {
@@ -165,7 +162,6 @@
 		this.loader(false);
 		
 		return this.each(function () {
-			
 			/*
 			 * Changed from .bind to .on.
 			 * */
@@ -175,7 +171,6 @@
 				e.trigger();
 			});
 		});
-		
 	};
 
 }(jQuery, this, document));
