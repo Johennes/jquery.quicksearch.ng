@@ -169,7 +169,6 @@
 			 * Changed from .bind to .on.
 			 * */
 			$(this).on(options.bind, function () {
-				
 				val = $(this).val();
 				e.trigger();
 			});
