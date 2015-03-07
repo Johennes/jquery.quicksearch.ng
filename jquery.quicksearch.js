@@ -1,14 +1,14 @@
 (function($, window, document, undefined) {
 	
 	$.fn.quicksearch = function (target, opt) {
-		var timeout, cache, rowcache, jq_results, val = '', e = this, options = $.extend({ 
+		var timeout, cache, rowcache, jq_results, val = "", e = this, options = $.extend({ 
 			delay: 100,
 			selector: null,
 			stripeRows: null,
 			loader: null,
-			noResults: '',
+			noResults: "",
 			matchedResultsCount: 0,
-			bind: 'keyup',
+			bind: "keyup",
 			onBefore: function () { 
 				return;
 			},
@@ -22,7 +22,7 @@
 				this.style.display = "none";
 			},
 			prepareQuery: function (val) {
-				return val.toLowerCase().split(' ');
+				return val.toLowerCase().split(" ");
 			},
 			testQuery: function (query, txt, _row) {
 				for (var i = 0; i < query.length; i += 1) {
@@ -39,7 +39,7 @@
 				numMatchedRows = 0,
 				noresults = true, 
 				query = options.prepareQuery(val),
-				val_empty = (val.replace(' ', '').length === 0);
+				val_empty = (val.replace(" ", "").length === 0);
 			
 			for (var i = 0, len = rowcache.length; i < len; i++) {
 				if (val_empty || options.testQuery(query, cache[i], rowcache[i])) {
@@ -83,10 +83,10 @@
 		
 		this.stripe = function () {
 			if (typeof options.stripeRows === "object" && options.stripeRows !== null) {
-				var joined = options.stripeRows.join(' ');
+				var joined = options.stripeRows.join(" ");
 				var stripeRows_length = options.stripeRows.length;
 				
-				jq_results.not(':hidden').each(function (i) {
+				jq_results.not(":hidden").each(function (i) {
 					$(this).removeClass(joined).addClass(options.stripeRows[i % stripeRows_length]);
 				});
 			}
@@ -95,7 +95,7 @@
 		};
 		
 		this.strip_html = function (input) {
-			var output = input.replace(new RegExp('<[^<]+\>', 'g'), "");
+			var output = input.replace(new RegExp("<[^<]+\>", "g"), "");
 			output = $.trim(output.toLowerCase());
 			return output;
 		};
