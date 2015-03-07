@@ -113,7 +113,11 @@
 		
 		this.loader = function (bool) {
 			if (typeof options.loader === "string" && options.loader !== "") {
-				 (bool) ? $(options.loader).show() : $(options.loader).hide();
+				if (bool) {
+					$(options.loader).show();
+				} else {
+					$(options.loader).hide();
+				}
 			}
 			return this;
 		};
