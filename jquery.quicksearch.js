@@ -23,6 +23,9 @@
 			hide: function () {
 				this.style.display = "none";
 			},
+			isHidden: function(node) {
+				return (node.style.display === "none");
+			},
 			prepareQuery: function (val) {
 				return val.toLowerCase().split(" ");
 			},
@@ -43,16 +46,12 @@
 				query = options.prepareQuery(val),
 				val_empty = (val.replace(" ", "").length === 0);
 			
-			var isHidden = function($node) {
-				return ($node[0].style.display === "none");
-			};
-			
 			for (var i = 0, len = rowcache.length; i < len; i++) {
 				if (val_empty || options.testQuery(query, textcache[i], rowcache[i])) {
 					noresults = false;
 					numMatchedRows++;
 					
-					if (!isHidden($(rowcache[i]))) {
+					if (!options.isHidden(rowcache[i])) {
 						continue;
 					}
 					
@@ -105,7 +104,7 @@
 						}
 					});
 				} else {
-					if (isHidden($(rowcache[i]))) {
+					if (options.isHidden(rowcache[i])) {
 						return;
 					}
 						
@@ -126,7 +125,7 @@
 									break;
 								}
 								
-								if (isHidden($node)) {
+								if (options.isHidden($node[0])) {
 									continue;
 								}
 								
@@ -145,7 +144,7 @@
 									break;
 								}
 								
-								if (isHidden($node)) {
+								if (options.isHidden($node[0])) {
 									continue;
 								}
 								
