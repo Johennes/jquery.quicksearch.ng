@@ -4,6 +4,8 @@
 		var timeout, textcache, rowcache, jq_results, val = "", e = this, options = $.extend({ 
 			delay: 100,
 			selector: null,
+			rowspanselector: null,
+			rowspangroupattribute: null,
 			stripeRows: null,
 			loader: null,
 			noResults: "",
@@ -41,13 +43,120 @@
 				query = options.prepareQuery(val),
 				val_empty = (val.replace(" ", "").length === 0);
 			
+			var isHidden = function($node) {
+				return ($node[0].style.display === "none");
+			};
+			
 			for (var i = 0, len = rowcache.length; i < len; i++) {
 				if (val_empty || options.testQuery(query, textcache[i], rowcache[i])) {
-					options.show.apply(rowcache[i]);
 					noresults = false;
 					numMatchedRows++;
+					
+					if (!isHidden($(rowcache[i]))) {
+						continue;
+					}
+					
+					options.show.apply(rowcache[i]);
+					
+					e.doIfString(options.rowspanselector, function() {						
+						// Check if any of the following elements has the rowspan
+						$node = $(rowcache[i]);
+						while (true) {
+							$node = $node.next();
+							
+							if ($node.length === 0
+								|| $node.attr(options.rowspangroupattribute) !== $(rowcache[i]).attr(options.rowspangroupattribute)) {
+								break;
+							}
+							
+							// The row span might be on a hidden row if all rows for this group were hidden
+							/*if (isHidden($node)) {
+								continue;
+							}*/
+							
+							rs = $node.find(options.rowspanselector);
+							if (rs.length !== 0) { // Move and increment rowspan
+								rs.detach().prependTo($(rowcache[i]));
+								rs.attr("rowspan", parseInt(rs.attr("rowspan")) + 1);
+								return;
+							}
+						}
+						
+						// Find rowspan on preceding row
+						$node = $(rowcache[i]);
+						while (true) {
+							$node = $node.prev();
+							
+							if ($node.length === 0
+								|| $node.attr(options.rowspangroupattribute) !== $(rowcache[i]).attr(options.rowspangroupattribute)) {
+								break;
+							}
+							
+							// The row span might be on a hidden row if all rows for this group were hidden
+							/*if (isHidden($node)) {
+								continue;
+							}*/
+							
+							rs = $node.find(options.rowspanselector);
+							if (rs.length !== 0) { // Move and increment rowspan
+								rs.attr("rowspan", parseInt(rs.attr("rowspan")) + 1);
+								return;
+							}
+						}
+					});
 				} else {
+					if (isHidden($(rowcache[i]))) {
+						return;
+					}
+						
 					options.hide.apply(rowcache[i]);
+					
+					e.doIfString(options.rowspanselector, function() {
+						var rs = $(rowcache[i]).find(options.rowspanselector);
+						if (rs.length !== 0) {
+							rs.attr("rowspan", parseInt(rs.attr("rowspan")) - 1);
+							
+							// Find next visible element
+							$node = $(rowcache[i]);
+							while (true) {
+								$node = $node.next();
+								
+								if ($node.length === 0
+									|| $node.attr(options.rowspangroupattribute) !== $(rowcache[i]).attr(options.rowspangroupattribute)) {
+									break;
+								}
+								
+								if (isHidden($node)) {
+									continue;
+								}
+								
+								// Move element to node and decrement rowspan
+								rs.detach().prependTo($node);
+								break;
+							}
+						} else {
+							// Find rowspan on previous row
+							$node = $(rowcache[i]);
+							while (true) {
+								$node = $node.prev();
+								
+								if ($node.length === 0
+									|| $node.attr(options.rowspangroupattribute) !== $(rowcache[i]).attr(options.rowspangroupattribute)) {
+									break;
+								}
+								
+								if (isHidden($node)) {
+									continue;
+								}
+								
+								rs = $node.find(options.rowspanselector);
+								if (rs.length !== 0) { // Decrement rowspan								
+									rs.attr("rowspan", parseInt(rs.attr("rowspan")) - 1);
+									break;
+								}
+							}
+						}
+					});
 				}
 			}
 			

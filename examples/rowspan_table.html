@@ -7,6 +7,8 @@
 		<script type="text/javascript">
 			$(document).ready(function () {
 				$("#id_search").quicksearch("table tbody tr", {
+					rowspanselector: 'th',
+					rowspangroupattribute: 'data-group',
 					noResults: '#noresults',
 					stripeRows: ['odd', 'even'],
 					loader: 'span.loading'
@@ -33,50 +35,50 @@
 				<tr id="noresults">
 					<td colspan="3">No Results</td>
 				</tr>
-				<tr>
+				<tr data-group="de">
 					<th rowspan="3">Germany</th>
 					<td>Berlin</td>
 					<td>1237</td>
 				</tr>
-				<tr>
+				<tr data-group="de">
 					<td>Hamburg</td>
 					<td>~600</td>
 				</tr>
-				<tr>
+				<tr data-group="de">
 					<td>Munich</td>
 					<td>1158</td>
 				</tr>
-				<tr>
-					<th rowspan="4">UK</th>
+				<tr data-group="uk">
+					<th rowspan="4">United Kingdom</th>
 					<td>Glasgow</td>
 					<td>543</td>
 				</tr>
-				<tr>
+				<tr data-group="uk">
 					<td>Liverpool</td>
 					<td>1207</td>
 				</tr>
-				<tr>
+				<tr data-group="uk">
 					<td>London</td>
 					<td>121</td>
 				</tr>
-				<tr>
+				<tr data-group="uk">
 					<td>Manchester</td>
 					<td>~100</td>
 				</tr>
-				<tr>
+				<tr data-group="us">
 					<th rowspan="4">USA</th>
 					<td>Chicago</td>
 					<td>1833</td>
 				</tr>
-				<tr>
+				<tr data-group="us">
 					<td>New York</td>
 					<td>1624</td>
 				</tr>
-				<tr>
+				<tr data-group="us">
 					<td>San Francisco</td>
 					<td>1776</td>
 				</tr>
-				<tr>
+				<tr data-group="us">
 					<td>Seattle</td>
 					<td>1851</td>
 				</tr>
