@@ -82,8 +82,7 @@
 		};
 		
 		this.stripe = function () {
-			if (typeof options.stripeRows === "object" && options.stripeRows !== null)
-			{
+			if (typeof options.stripeRows === "object" && options.stripeRows !== null) {
 				var joined = options.stripeRows.join(' ');
 				var stripeRows_length = options.stripeRows.length;
 				
