@@ -1,7 +1,7 @@
 (function($, window, document, undefined) {
 	
 	$.fn.quicksearch = function (target, opt) {
-		var timeout, cache, rowcache, jq_results, val = "", e = this, options = $.extend({ 
+		var timeout, textcache, rowcache, jq_results, val = "", e = this, options = $.extend({ 
 			delay: 100,
 			selector: null,
 			stripeRows: null,
@@ -42,7 +42,7 @@
 				val_empty = (val.replace(" ", "").length === 0);
 			
 			for (var i = 0, len = rowcache.length; i < len; i++) {
-				if (val_empty || options.testQuery(query, cache[i], rowcache[i])) {
+				if (val_empty || options.testQuery(query, textcache[i], rowcache[i])) {
 					options.show.apply(rowcache[i]);
 					noresults = false;
 					numMatchedRows++;
@@ -130,7 +130,7 @@
 			}
 			
 			var t = (typeof options.selector === "string") ? jq_results.find(options.selector) : jq_results;
-			cache = t.map(function () {
+			textcache = t.map(function () {
 				return e.strip_html(this.innerHTML);
 			});
 			
