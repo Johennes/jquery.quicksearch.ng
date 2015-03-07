@@ -100,36 +100,45 @@
 			return output;
 		};
 		
+		this.doIfString = function(arg, callback) {
+			if (typeof arg === "string" && arg !== "") {
+				return callback();
+			}
+		};
+		
 		this.results = function (bool) {
-			if (typeof options.noResults === "string" && options.noResults !== "") {
+			e.doIfString(options.noResults, function() {
 				if (bool) {
 					$(options.noResults).hide();
 				} else {
 					$(options.noResults).show();
 				}
-			}
+			});
 			return this;
 		};
 		
 		this.loader = function (bool) {
-			if (typeof options.loader === "string" && options.loader !== "") {
+			e.doIfString(options.loader, function() {
 				if (bool) {
 					$(options.loader).show();
 				} else {
 					$(options.loader).hide();
 				}
-			}
+			});
 			return this;
 		};
 		
 		this.cache = function () {
 			jq_results = $(target);
 			
-			if (typeof options.noResults === "string" && options.noResults !== "") {
+			e.doIfString(options.noResults, function() {
 				jq_results = jq_results.not(options.noResults);
-			}
+			});
 			
-			var t = (typeof options.selector === "string") ? jq_results.find(options.selector) : jq_results;
+			var t = e.doIfString(options.selector, function() {
+				return jq_results.find(options.selector);
+			}) || jq_results;
+			
 			textcache = t.map(function () {
 				return e.strip_html(this.innerHTML);
 			});
