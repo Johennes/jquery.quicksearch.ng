@@ -39,6 +39,12 @@
 			}
 		}, opt);
 		
+		var addToRowSpan = function($node, amount) {
+			$node.attr("rowspan", parseInt($node.attr("rowspan")) + amount);
+		};
+			
+			
+		
 		this.go = function () {
 			var i = 0,
 				numMatchedRows = 0,
@@ -61,7 +67,7 @@
 						// Check if this element has the rowspan
 						var rs = $(rowcache[i]).find(options.rowspanselector);
 						if (rs.length !== 0) {
-							rs.attr("rowspan", parseInt(rs.attr("rowspan")) - 1);
+							addToRowSpan(rs, 1);
 							return;
 						}
 						
@@ -82,7 +88,7 @@
 							rs = $node.find(options.rowspanselector);
 							if (rs.length !== 0) { // Move and increment rowspan
 								rs.detach().prependTo($(rowcache[i]));
-								rs.attr("rowspan", parseInt(rs.attr("rowspan")) + 1);
+								addToRowSpan(rs, 1);
 								return;
 							}
 						}
@@ -103,7 +109,7 @@
 							
 							rs = $node.find(options.rowspanselector);
 							if (rs.length !== 0) { // Move and increment rowspan
-								rs.attr("rowspan", parseInt(rs.attr("rowspan")) + 1);
+								addToRowSpan(rs, 1);
 								return;
 							}
 						}
@@ -118,7 +124,7 @@
 					e.doIfString(options.rowspanselector, function() {
 						var rs = $(rowcache[i]).find(options.rowspanselector);
 						if (rs.length !== 0) {
-							rs.attr("rowspan", parseInt(rs.attr("rowspan")) - 1);
+							addToRowSpan(rs, -1);
 							
 							// Find next visible element
 							for (var j = i + 1; j < len; ++j) {
@@ -153,7 +159,7 @@
 								
 								rs = $node.find(options.rowspanselector);
 								if (rs.length !== 0) { // Decrement rowspan								
-									rs.attr("rowspan", parseInt(rs.attr("rowspan")) - 1);
+									addToRowSpan(rs, -1);
 									break;
 								}
 							}
