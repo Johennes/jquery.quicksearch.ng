@@ -1,43 +1,44 @@
 (function($, window, document, undefined) {
 	
 	$.fn.quicksearch = function (target, opt) {
-		var timeout, textcache, rowcache, rowspancache, val = "", e = this, options = $.extend({ 
-			delay: 100,
-			selector: null,
-			rowspanselector: null,
-			rowspangroupattribute: "data-quicksearch-group",
-			stripeRows: null,
-			loader: null,
-			noResults: "",
-			matchedResultsCount: 0,
-			bind: "keyup",
-			onBefore: function () { 
-				return;
-			},
-			onAfter: function () { 
-				return;
-			},
-			show: function () {
-				this.style.display = "";
-			},
-			hide: function () {
-				this.style.display = "none";
-			},
-			isHidden: function(node) {
-				return (node.style.display === "none");
-			},
-			prepareQuery: function (val) {
-				return val.toLowerCase().split(" ");
-			},
-			testQuery: function (query, txt, _row) {
-				for (var i = 0; i < query.length; i += 1) {
-					if (txt.indexOf(query[i]) === -1) {
-						return false;
+		var timeout, textcache, rowcache, rowspancache, val = "",
+			e = this, groupAttrib = "data-quicksearch-group",
+			options = $.extend({ 
+				delay: 100,
+				selector: null,
+				rowspanselector: null,
+				stripeRows: null,
+				loader: null,
+				noResults: "",
+				matchedResultsCount: 0,
+				bind: "keyup",
+				onBefore: function () { 
+					return;
+				},
+				onAfter: function () { 
+					return;
+				},
+				show: function () {
+					this.style.display = "";
+				},
+				hide: function () {
+					this.style.display = "none";
+				},
+				isHidden: function(node) {
+					return (node.style.display === "none");
+				},
+				prepareQuery: function (val) {
+					return val.toLowerCase().split(" ");
+				},
+				testQuery: function (query, txt, _row) {
+					for (var i = 0; i < query.length; i += 1) {
+						if (txt.indexOf(query[i]) === -1) {
+							return false;
+						}
 					}
+					return true;
 				}
-				return true;
-			}
-		}, opt);
+			}, opt);
 		
 		var addToRowSpan = function($node, amount) {
 			$node.attr("rowspan", parseInt($node.attr("rowspan")) + amount);
@@ -68,7 +69,7 @@
 					options.show.apply(rowcache[i]);
 					
 					ifNonEmptyString(options.rowspanselector, function() {
-						var group = $(rowcache[i]).attr(options.rowspangroupattribute);
+						var group = $(rowcache[i]).attr(groupAttrib);
 						
 						if (!rowspancache[group]) { // Now rowspan in this group
 							return;
@@ -96,7 +97,7 @@
 					options.hide.apply(rowcache[i]);
 					
 					ifNonEmptyString(options.rowspanselector, function() {
-						var group = $(rowcache[i]).attr(options.rowspangroupattribute);
+						var group = $(rowcache[i]).attr(groupAttrib);
 						
 						if (!rowspancache[group]) { // Now rowspan in this group
 							return;
@@ -112,7 +113,7 @@
 							for (var j = i + 1; j < len; ++j) {
 								$node = $(rowcache[j]);
 								
-								if ($node.attr(options.rowspangroupattribute) !== group) {
+								if ($node.attr(groupAttrib) !== group) {
 									break; // We've reached the end of this group
 								}
 								
@@ -230,14 +231,14 @@
 						rs_text = $rs[0].innerHTML;
 						++rs_group;
 						
-						$(rowcache[i]).attr(options.rowspangroupattribute, rs_group);
+						$(rowcache[i]).attr(groupAttrib, rs_group);
 						
-						rowspancache[$(rowcache[i]).attr(options.rowspangroupattribute)] = {
+						rowspancache[$(rowcache[i]).attr(groupAttrib)] = {
 							$rs: $rs,
 							row: i
 						};
 					} else if (rs_group > -1) {
-						$(rowcache[i]).attr(options.rowspangroupattribute, rs_group);
+						$(rowcache[i]).attr(groupAttrib, rs_group);
 					}
 				});
 				
