@@ -1,7 +1,7 @@
 (function($, window, document, undefined) {
 	
 	$.fn.quicksearch = function (target, opt) {
-		var timeout, textcache, rowcache, jq_results, val = "", e = this, options = $.extend({ 
+		var timeout, textcache, rowcache, val = "", e = this, options = $.extend({ 
 			delay: 100,
 			selector: null,
 			rowspanselector: null,
@@ -51,7 +51,7 @@
 					noresults = false;
 					numMatchedRows++;
 					
-					if (!options.isHidden(rowcache[i])) {
+					if (!options.isHidden(rowcache[i])) { // Only show rows that are not visible
 						continue;
 					}
 					
@@ -65,7 +65,7 @@
 							return;
 						}
 						
-						// Check if any of the following elements has the rowspan
+						// Check for rowspan on any of the following rows
 						for (var j = i + 1; j < len; ++j) {
 							$node = $(rowcache[j]);
 							
@@ -197,12 +197,12 @@
 				var joined = options.stripeRows.join(" ");
 				var stripeRows_length = options.stripeRows.length;
 				
-				jq_results.not(":hidden").each(function (i) {
+				rowcache.not(":hidden").each(function (i) {
 					$(this).removeClass(joined).addClass(options.stripeRows[i % stripeRows_length]);
 				});
 				
 				e.doIfString(options.rowspanselector, function() {
-					jq_results.find(options.rowspanselector).not(":hidden").each(function (i) {
+					rowcache.find(options.rowspanselector).not(":hidden").each(function (i) {
 						$(this).removeClass(joined).addClass(options.stripeRows[i % stripeRows_length]);
 					});
 				});
@@ -246,15 +246,15 @@
 		};
 		
 		this.cache = function () {
-			jq_results = $(target);
+			rowcache = $(target);
 			
 			e.doIfString(options.noResults, function() {
-				jq_results = jq_results.not(options.noResults);
+				rowcache = rowcache.not(options.noResults);
 			});
 			
 			var t = e.doIfString(options.selector, function() {
-				return jq_results.find(options.selector);
-			}) || jq_results;
+				return rowcache.find(options.selector);
+			}) || rowcache;
 			
 			textcache = [];
 			var rs_text = ""
@@ -272,9 +272,7 @@
 				textcache.push(e.strip_html(text));
 			}
 			
-			rowcache = jq_results.map(function () {
-				return this;
-			});
+			// TODO: Make sure that rowcache and textcache have the same number 
 
 			/*
 			 * Modified fix for sync-ing "val". 
