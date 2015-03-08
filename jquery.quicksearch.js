@@ -229,15 +229,13 @@
 						rs_text = $rs[0].innerHTML;
 						++rs_group;
 						
-						if (rs_group > -1 && !$(rowcache[i]).attr(options.rowspangroupattribute)) {
-							$(rowcache[i]).attr(options.rowspangroupattribute, rs_group);
-						}
+						$(rowcache[i]).attr(options.rowspangroupattribute, rs_group);
 						
 						rowspancache[$(rowcache[i]).attr(options.rowspangroupattribute)] = {
 							$rs: $rs,
 							row: i
 						};
-					} else if (rs_group > -1 && !$(rowcache[i]).attr(options.rowspangroupattribute)) {
+					} else if (rs_group > -1) {
 						$(rowcache[i]).attr(options.rowspangroupattribute, rs_group);
 					}
 				});
