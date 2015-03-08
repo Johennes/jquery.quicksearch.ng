@@ -12,72 +12,84 @@ however.
 
 #### Example for Table Rows
 
-	/* Example form */
-	<form>
-		<input type="text" id="search">
-	</form>
-	
-	/* Example table */
-	<table>
-		<tbody>
-			<tr>
-				<td>Test cell</td>
-				<td>Another test cell</td>
-			</tr>
-		</tbody>
-	</table>
-	
-	<script type="text/javascript" src="jquery.js"></script>
-	<script type="text/javascript" src="jquery.quicksearch.js"></script>
-	<script type="text/javascript">
-		$('input#search').quicksearch('table tbody tr');
-	</script>
+``` html
+/* Example form */
+<form>
+	<input type="text" id="search">
+</form>
+
+/* Example table */
+<table>
+	<tbody>
+		<tr>
+			<td>Test cell</td>
+			<td>Another test cell</td>
+		</tr>
+	</tbody>
+</table>
+
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="jquery.quicksearch.js"></script>
+<script type="text/javascript">
+	$('input#search').quicksearch('table tbody tr');
+</script>
+```
 
 #### Example for `<th>` Elements in a Table Row
 
-	$('input#search').quicksearch('table tbody tr', {
-		selector: 'th'
-	});
+``` javascript
+$('input#search').quicksearch('table tbody tr', {
+	selector: 'th'
+});
+```
 
 #### Example for Table with Rowspan
 
-	<input type="text" id="search">
-	
-	<table>
-		<tr>
-			<th rowspan="3">Germany</th>
-			<td>Berlin</td>
-		</tr>
-		<tr>
-			<td>Hamburg</td>
-		</tr>
-		<tr>
-			<td>Munich</td>
-		</tr>
-	</table>
-		
+``` html
+<input type="text" id="search">
+
+<table>
+	<tr>
+		<th rowspan="3">Germany</th>
+		<td>Berlin</td>
+	</tr>
+	<tr>
+		<td>Hamburg</td>
+	</tr>
+	<tr>
+		<td>Munich</td>
+	</tr>
+</table>
+
+<script type="text/javascript">
 	$('input#search').quicksearch('table tr', {
 		selector: 'td',
 		rowSpanSelector: 'th'
 	});
+</script>
+```
 
 #### Example for Dynamic Elements
 
-	var qs = $('input#id_search_list').quicksearch('ul#list_example li');
-	$('ul#list_example').append('<li>Loaded with Ajax</li>');
-	qs.cache();
+``` javascript
+var qs = $('input#id_search_list').quicksearch('ul#list_example li');
+$('ul#list_example').append('<li>Loaded with Ajax</li>');
+qs.cache();
+```
 
 #### Example of How to Use with AJAX
 
-	var qs = $('input#search').quicksearch('table tbody tr');
-	$.ajax({
-		'type': 'GET',
-		'url': 'index.html',
-		'success': function (data) {
-			$('table tbody tr').append(data);
-			qs.cache();
-		}
-	});
+``` javascript
+var qs = $('input#search').quicksearch('table tbody tr');
+$.ajax({
+	'type': 'GET',
+	'url': 'index.html',
+	'success': function (data) {
+		$('table tbody tr').append(data);
+		qs.cache();
+	}
+});
+```
 
 ## Options
 
@@ -114,32 +126,34 @@ however.
 
 For example:
 
-	$('input#search').quicksearch('table tbody tr', {
-		'delay': 100,
-		'selector': 'th',
-		'stripeRows': ['odd', 'even'],
-		'loader': 'span.loading',
-		'noResults': 'tr#noresults',
-		'bind': 'keyup keydown',
-		'onBefore': function () {
-			console.log('on before');
-		},
-		'onAfter': function () {
-			console.log('on after');
-		},
-		'show': function () {
-			$(this).addClass('show');
-		},
-		'hide': function () {
-			$(this).removeClass('show');
-		}
-		'prepareQuery': function (val) {
-			return new RegExp(val, "i");
-		},
-		'testQuery': function (query, txt, _row) {
-			return query.test(txt);
-		}
-	});
+``` javascript
+$('input#search').quicksearch('table tbody tr', {
+	'delay': 100,
+	'selector': 'th',
+	'stripeRows': ['odd', 'even'],
+	'loader': 'span.loading',
+	'noResults': 'tr#noresults',
+	'bind': 'keyup keydown',
+	'onBefore': function () {
+		console.log('on before');
+	},
+	'onAfter': function () {
+		console.log('on after');
+	},
+	'show': function () {
+		$(this).addClass('show');
+	},
+	'hide': function () {
+		$(this).removeClass('show');
+	}
+	'prepareQuery': function (val) {
+		return new RegExp(val, "i");
+	},
+	'testQuery': function (query, txt, _row) {
+		return query.test(txt);
+	}
+});
+```
 
 ## License
 
