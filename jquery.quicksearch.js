@@ -1,7 +1,7 @@
 (function($, window, document, undefined) {
 	
 	$.fn.quicksearch = function (target, opt) {
-		var timeout, textcache, rowcache, val = "", e = this, options = $.extend({ 
+		var timeout, textcache, rowcache, rowspancache, val = "", e = this, options = $.extend({ 
 			delay: 100,
 			selector: null,
 			rowspanselector: null,
@@ -68,14 +68,18 @@
 					options.show.apply(rowcache[i]);
 					
 					ifNonEmptyString(options.rowspanselector, function() {
-						// Check if this row has the rowspan. If so, we can just increment it and are done.
-						var $rs = $(rowcache[i]).find(options.rowspanselector);
-						if ($rs.length !== 0) {
+						var group = $(rowcache[i]).attr(options.rowspangroupattribute);
+						
+						// Increment the group's rowspan
+						$rs = rowspancache[group];
+						if ($rs) {
 							addToRowSpan($rs, 1);
-							return;
 						}
 						
-						var group = $(rowcache[i]).attr(options.rowspangroupattribute);
+						// Check if this row has the rowspan. If so, we're done.
+						if ($(rowcache[i]).has($rs[0]).length !== 0) {
+							return;
+						}
 						
 						// Check if any of the following rows has the rowspan. Note that the rowspan might be
 						// on a hidden row if all rows of this group were hidden.
@@ -86,32 +90,12 @@
 								break; // We've reached the end of this group
 							}
 							
-							$rs = $node.find(options.rowspanselector);
-							if ($rs.length !== 0) {
-								// We've found the rowspan. Increment it and move it to the shown row.
-								addToRowSpan($rs, 1);
+							// We've found a visible row. If it has the rowspan, move it to the shown row.
+							if ($node.has($rs[0]).length !== 0) {
 								$rs.detach().prependTo($(rowcache[i]));
 								// TODO: This will only work if the rowspan element is the first
 								// child inside the row.
-								return;
-							}
-						}
-						
-						// Check if any of the preceding rows has the rowspan. Note that the rowspan might be
-						// on a hidden row if all rows of this group were hidden.
-						for (var j = i - 1; j >= 0; --j) {
-							$node = $(rowcache[j]);
-							
-							if ($node.attr(options.rowspangroupattribute) !== group) {
-								break; // We've reached the end of this group
-							}
-							
-							$rs = $node.find(options.rowspanselector);
-							if ($rs.length !== 0) {
-								// We've found the rowspan. Increment it. No need to move it since it already
-								// is on a preceding row.
-								addToRowSpan($rs, 1);
-								return;
+								break;
 							}
 						}
 					});
@@ -125,11 +109,14 @@
 					ifNonEmptyString(options.rowspanselector, function() {
 						var group = $(rowcache[i]).attr(options.rowspangroupattribute);
 						
-						// Check if this row has the rowspan. If so, we need to move it to the next visible row.
-						var $rs = $(rowcache[i]).find(options.rowspanselector);
-						if ($rs.length !== 0) {
+						// Decrement the group's rowspan
+						$rs = rowspancache[group];
+						if ($rs) {
 							addToRowSpan($rs, -1);
-							
+						}
+						
+						// Check if this row has the rowspan. If so, we need to move it to the next visible row.
+						if ($(rowcache[i]).has($rs[0]).length !== 0) {
 							// Find next visible row
 							for (var j = i + 1; j < len; ++j) {
 								$node = $(rowcache[j]);
@@ -148,30 +135,6 @@
 								// child inside the row.
 								break;
 							}
-						} else {
-							// Check if any of the preceding rows has the rowspan
-							for (var j = i - 1; j > 0; --j) {
-								$node = $(rowcache[j]);
-								
-								if ($node.attr(options.rowspangroupattribute) !== group) {
-									break; // We've reached the end of this group
-								}
-								
-								if (options.isHidden($node[0])) {
-									continue; // Ignore hidden nodes
-								}
-								
-								$rs = $node.find(options.rowspanselector);
-								if ($rs.length !== 0) {
-									// We've found the rowspan. Decrement it.
-									addToRowSpan($rs, -1);
-									break;
-								}
-							}
-							
-							// We don't need to search for the rowspan on any of the
-							// following rows since it will always be on the first
-							// visible row inside a group and this row was visible.
 						}
 					});
 				}
@@ -262,13 +225,15 @@
 			});
 			
 			textcache = [];
+			rowspancache = {};
 			var rs_text = ""
 			
 			for (var i = 0, len = rowcache.length; i < len; ++i) {
-				// Check if there is a rowspan. If so, remember its contents.
+				// Check if there is a rowspan. If so, cache it and remember its contents.
 				ifNonEmptyString(options.rowspanselector, function() {
 					var $rs = $(rowcache[i]).find(options.rowspanselector);
 					if ($rs.length !== 0) {
+						rowspancache[$(rowcache[i]).attr(options.rowspangroupattribute)] = $rs;
 						rs_text = $rs[0].innerHTML;
 					}
 				});
