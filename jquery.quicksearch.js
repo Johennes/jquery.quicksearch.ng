@@ -43,6 +43,12 @@
 			$node.attr("rowspan", parseInt($node.attr("rowspan")) + amount);
 		};
 		
+		var ifNonEmptyString = function(arg, callback) {
+			if (typeof arg === "string" && arg !== "") {
+				return callback();
+			}
+		};
+		
 		this.go = function () {
 			var i = 0,
 				numMatchedRows = 0,
@@ -61,7 +67,7 @@
 					
 					options.show.apply(rowcache[i]);
 					
-					e.doIfString(options.rowspanselector, function() {
+					ifNonEmptyString(options.rowspanselector, function() {
 						// Check if this row has the rowspan. If so, we can just increment it and are done.
 						var $rs = $(rowcache[i]).find(options.rowspanselector);
 						if ($rs.length !== 0) {
@@ -116,7 +122,7 @@
 						
 					options.hide.apply(rowcache[i]);
 					
-					e.doIfString(options.rowspanselector, function() {
+					ifNonEmptyString(options.rowspanselector, function() {
 						var group = $(rowcache[i]).attr(options.rowspangroupattribute);
 						
 						// Check if this row has the rowspan. If so, we need to move it to the next visible row.
@@ -210,7 +216,7 @@
 					$(this).removeClass(joined).addClass(options.stripeRows[i % stripeRows_length]);
 				});
 				
-				e.doIfString(options.rowspanselector, function() {
+				ifNonEmptyString(options.rowspanselector, function() {
 					rowcache.find(options.rowspanselector).not(":hidden").each(function (i) {
 						$(this).removeClass(joined).addClass(options.stripeRows[i % stripeRows_length]);
 					});
@@ -220,20 +226,14 @@
 			return this;
 		};
 		
-		this.strip_html = function (input) {
+		var strip_html = function (input) {
 			var output = input.replace(new RegExp("<[^<]+\>", "g"), "");
 			output = $.trim(output.toLowerCase());
 			return output;
 		};
 		
-		this.doIfString = function(arg, callback) {
-			if (typeof arg === "string" && arg !== "") {
-				return callback();
-			}
-		};
-		
 		this.results = function (bool) {
-			e.doIfString(options.noResults, function() {
+			ifNonEmptyString(options.noResults, function() {
 				if (bool) {
 					$(options.noResults).hide();
 				} else {
@@ -244,7 +244,7 @@
 		};
 		
 		this.loader = function (bool) {
-			e.doIfString(options.loader, function() {
+			ifNonEmptyString(options.loader, function() {
 				if (bool) {
 					$(options.loader).show();
 				} else {
@@ -257,7 +257,7 @@
 		this.cache = function () {
 			rowcache = $(target);
 			
-			e.doIfString(options.noResults, function() {
+			ifNonEmptyString(options.noResults, function() {
 				rowcache = rowcache.not(options.noResults);
 			});
 			
@@ -266,7 +266,7 @@
 			
 			for (var i = 0, len = rowcache.length; i < len; ++i) {
 				// Check if there is a rowspan. If so, remember its contents.
-				e.doIfString(options.rowspanselector, function() {
+				ifNonEmptyString(options.rowspanselector, function() {
 					var $rs = $(rowcache[i]).find(options.rowspanselector);
 					if ($rs.length !== 0) {
 						rs_text = $rs[0].innerHTML;
@@ -274,7 +274,7 @@
 				});
 				
 				// Find nodes that shall be used for matching
-				var t = e.doIfString(options.selector, function() {
+				var t = ifNonEmptyString(options.selector, function() {
 					return $(rowcache[i]).find(options.selector);
 				}) || $(rowcache[i]);
 				
@@ -284,7 +284,7 @@
 					text += t[j].innerHTML;
 				}
 				
-				textcache.push(e.strip_html(text));
+				textcache.push(strip_html(text));
 			}
 
 			/*
