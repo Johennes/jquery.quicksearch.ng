@@ -78,9 +78,10 @@
 						var $rs = rowspancache[group].$rs;
 						addToRowSpan($rs, 1);
 						
-						// Check if any of the following rows has the rowspan. If so, we move it
-						// to the shown row.
-						if (rowspancache[group].row > i) {
+						// Check if the rowspan is currently hidden or if any of the following
+						// rows has the rowspan. If so, we move it to the shown row.
+						if (options.isHidden(rowcache[rowspancache[group].row])
+							|| rowspancache[group].row > i) {
 							$rs.detach().prependTo($(rowcache[i]));
 							rowspancache[group].row = i;
 							// TODO: This will only work if the rowspan element is the first
@@ -91,7 +92,7 @@
 					if (options.isHidden(rowcache[i])) { // Only hide rows that are visible
 						continue;
 					}
-						
+					
 					options.hide.apply(rowcache[i]);
 					
 					ifNonEmptyString(options.rowspanselector, function() {
