@@ -66,9 +66,8 @@
 						}
 						
 						// Check if any of the following elements has the rowspan
-						$node = $(rowcache[i]);
-						while (true) {
-							$node = $node.next();
+						for (var j = i + 1; j < len; ++j) {
+							$node = $(rowcache[j]);
 							
 							if ($node.length === 0
 								|| $node.attr(options.rowspangroupattribute) !== $(rowcache[i]).attr(options.rowspangroupattribute)) {
@@ -89,9 +88,8 @@
 						}
 						
 						// Find rowspan on preceding row
-						$node = $(rowcache[i]);
-						while (true) {
-							$node = $node.prev();
+						for (var j = i - 1; j >= 0; --j) {
+							$node = $(rowcache[j]);
 							
 							if ($node.length === 0
 								|| $node.attr(options.rowspangroupattribute) !== $(rowcache[i]).attr(options.rowspangroupattribute)) {
@@ -123,9 +121,8 @@
 							rs.attr("rowspan", parseInt(rs.attr("rowspan")) - 1);
 							
 							// Find next visible element
-							$node = $(rowcache[i]);
-							while (true) {
-								$node = $node.next();
+							for (var j = i + 1; j < len; ++j) {
+								$node = $(rowcache[j]);
 								
 								if ($node.length === 0
 									|| $node.attr(options.rowspangroupattribute) !== $(rowcache[i]).attr(options.rowspangroupattribute)) {
@@ -142,9 +139,8 @@
 							}
 						} else {
 							// Find rowspan on previous row
-							$node = $(rowcache[i]);
-							while (true) {
-								$node = $node.prev();
+							for (var j = i - 1; j > 0; --j) {
+								$node = $(rowcache[j]);
 								
 								if ($node.length === 0
 									|| $node.attr(options.rowspangroupattribute) !== $(rowcache[i]).attr(options.rowspangroupattribute)) {
