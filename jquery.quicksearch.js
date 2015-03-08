@@ -5,7 +5,7 @@
 			delay: 100,
 			selector: null,
 			rowspanselector: null,
-			rowspangroupattribute: null,
+			rowspangroupattribute: "data-quicksearch-group",
 			stripeRows: null,
 			loader: null,
 			noResults: "",
@@ -219,18 +219,26 @@
 			
 			textcache = [];
 			rowspancache = {};
-			var rs_text = ""
+			var rs_text = "", rs_group = -1;
 			
 			for (var i = 0, len = rowcache.length; i < len; ++i) {
-				// Check if there is a rowspan. If so, cache it and remember its contents.
+				// Check if there is a rowspan
 				ifNonEmptyString(options.rowspanselector, function() {
 					var $rs = $(rowcache[i]).find(options.rowspanselector);
 					if ($rs.length !== 0) {
+						rs_text = $rs[0].innerHTML;
+						++rs_group;
+						
+						if (rs_group > -1 && !$(rowcache[i]).attr(options.rowspangroupattribute)) {
+							$(rowcache[i]).attr(options.rowspangroupattribute, rs_group);
+						}
+						
 						rowspancache[$(rowcache[i]).attr(options.rowspangroupattribute)] = {
 							$rs: $rs,
 							row: i
 						};
-						rs_text = $rs[0].innerHTML;
+					} else if (rs_group > -1 && !$(rowcache[i]).attr(options.rowspangroupattribute)) {
+						$(rowcache[i]).attr(options.rowspangroupattribute, rs_group);
 					}
 				});
 				
