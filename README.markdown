@@ -8,7 +8,9 @@ however.
 
 ## Usage
 
-	$(input_selector).quicksearch(elements_to_search, options);
+``` javascript
+$(input_selector).quicksearch(elements_to_search, options);
+```
 
 #### Example for Table Rows
 
