@@ -1,6 +1,12 @@
 (function($, window, document, undefined) {
 	
 	$.fn.quicksearch = function (target, opt) {
+		var ifNonEmptyString = function(arg, callback) {
+			if (typeof arg === "string" && arg !== "") {
+				return callback();
+			}
+		};
+		
 		var timeout, textCache, rowCache, rowSpanCache, val = "",
 			e = this, groupAttrib = "data-quicksearch-group",
 			options = $.extend({ 
@@ -40,14 +46,10 @@
 				}
 			}, opt);
 		
+		var handleRowSpan = ifNonEmptyString(options.rowSpanSelector, function() { return true; }) || false;
+		
 		var addToRowSpan = function($node, amount) {
 			$node.attr("rowspan", parseInt($node.attr("rowspan")) + amount);
-		};
-		
-		var ifNonEmptyString = function(arg, callback) {
-			if (typeof arg === "string" && arg !== "") {
-				return callback();
-			}
 		};
 		
 		this.go = function () {
@@ -68,27 +70,9 @@
 					
 					options.show.apply(rowCache[i]);
 					
-					ifNonEmptyString(options.rowSpanSelector, function() {
-						var group = $(rowCache[i]).attr(groupAttrib);
-						
-						if (!rowSpanCache[group]) { // Now rowspan in this group
-							return;
-						}
-						
-						// Increment the group's rowspan
-						var $rs = rowSpanCache[group].$rs;
-						addToRowSpan($rs, 1);
-						
-						// Check if the rowspan is currently hidden or if any of the following
-						// rows has the rowspan. If so, we move it to the shown row.
-						if (options.isHidden(rowCache[rowSpanCache[group].row])
-							|| rowSpanCache[group].row > i) {
-							$rs.detach().prependTo($(rowCache[i]));
-							rowSpanCache[group].row = i;
-							// TODO: This will only work if the rowspan element is the first
-							// child inside the row.
-						}
-					});
+					if (handleRowSpan) {
+						handleRowSpanOnShow(i);
+					}
 				} else {
 					if (options.isHidden(rowCache[i])) { // Only hide rows that are visible
 						continue;
@@ -96,42 +80,9 @@
 					
 					options.hide.apply(rowCache[i]);
 					
-					ifNonEmptyString(options.rowSpanSelector, function() {
-						var group = $(rowCache[i]).attr(groupAttrib);
-						
-						if (!rowSpanCache[group]) { // Now rowspan in this group
-							return;
-						}
-						
-						// Decrement the group's rowspan
-						var $rs = rowSpanCache[group].$rs;
-						addToRowSpan($rs, -1);
-						
-						// Check if this row has the rowspan. If so, we need to move it to the next visible row.
-						if (rowSpanCache[group].row === i) {
-							// Find next visible row
-							for (var j = i + 1; j < len; ++j) {
-								$node = $(rowCache[j]);
-								
-								if ($node.attr(groupAttrib) !== group) {
-									break; // We've reached the end of this group
-								}
-								
-								if (options.isHidden($node[0])) {
-									continue; // Ignore hidden nodes
-								}
-								
-								// We've found a visible row. Move the rowspan inside it.
-								$rs.detach().prependTo($node);
-								// TODO: This will only work if the rowspan element is the first
-								// child inside the row.
-								
-								rowSpanCache[group].row = j;
-								
-								break;
-							}
-						}
-					});
+					if (handleRowSpan) {
+						handleRowSpanOnHide(i);
+					}
 				}
 			}
 			
@@ -148,6 +99,67 @@
 			
 			return this;
 		};
+		
+		var handleRowSpanOnShow = function(rowIndex) {
+			var $row = $(rowCache[rowIndex]),
+				group = $row.attr(groupAttrib);
+			
+			if (!rowSpanCache[group]) { // Now rowspan in this group
+				return;
+			}
+			
+			// Increment the group's rowspan
+			var $rs = rowSpanCache[group].$rs;
+			addToRowSpan($rs, 1);
+			
+			// Check if the rowspan is currently hidden or if any of the following
+			// rows has the rowspan. If so, we move it to the shown row.
+			if (options.isHidden(rowCache[rowSpanCache[group].row])
+				|| rowSpanCache[group].row > rowIndex) {
+					
+				$rs.detach().prependTo($row);
+				rowSpanCache[group].row = rowIndex;
+				// TODO: This will only work if the rowspan element is the first
+				// child inside the row.
+			}
+		};
+		
+		var handleRowSpanOnHide = function(rowIndex) {
+			var group = $(rowCache[rowIndex]).attr(groupAttrib);
+			
+			if (!rowSpanCache[group]) { // Now rowspan in this group
+				return;
+			}
+			
+			// Decrement the group's rowspan
+			var $rs = rowSpanCache[group].$rs;
+			addToRowSpan($rs, -1);
+			
+			// Check if this row has the rowspan. If so, we need to move it to the next visible row.
+			if (rowSpanCache[group].row === rowIndex) {
+				// Find next visible row
+				for (var j = rowIndex + 1, len = rowCache.length; j < len; ++j) {
+					$node = $(rowCache[j]);
+					
+					if ($node.attr(groupAttrib) !== group) {
+						break; // We've reached the end of this group
+					}
+					
+					if (options.isHidden($node[0])) {
+						continue; // Ignore hidden nodes
+					}
+					
+					// We've found a visible row. Move the rowspan inside it.
+					$rs.detach().prependTo($node);
+					// TODO: This will only work if the rowspan element is the first
+					// child inside the row.
+					
+					rowSpanCache[group].row = j;
+					
+					break;
+				}
+			}
+		}
 		
 		/*
 		 * External API so that users can perform search programatically. 
@@ -174,11 +186,11 @@
 					$(this).removeClass(joined).addClass(options.stripeRows[i % stripeRowsLength]);
 				});
 				
-				ifNonEmptyString(options.rowSpanSelector, function() {
+				if (handleRowSpan) {
 					rowCache.find(options.rowSpanSelector).not(":hidden").each(function (i) {
 						$(this).removeClass(joined).addClass(options.stripeRows[i % stripeRowsLength]);
 					});
-				});
+				}
 			}
 			
 			return this;
@@ -224,28 +236,26 @@
 			var rsText = "", rsGroup = -1;
 			
 			for (var i = 0, len = rowCache.length; i < len; ++i) {
-				// Check if there is a rowspan
-				ifNonEmptyString(options.rowSpanSelector, function() {
-					var $rs = $(rowCache[i]).find(options.rowSpanSelector);
+				var $row = $(rowCache[i]);
+				
+				if (handleRowSpan) { // Check if there is a rowspan
+					var $rs = $row.find(options.rowSpanSelector);
 					if ($rs.length !== 0) {
 						rsText = $rs[0].innerHTML;
 						++rsGroup;
 						
-						$(rowCache[i]).attr(groupAttrib, rsGroup);
+						$row.attr(groupAttrib, rsGroup);
 						
-						rowSpanCache[$(rowCache[i]).attr(groupAttrib)] = {
-							$rs: $rs,
-							row: i
-						};
+						rowSpanCache[$row.attr(groupAttrib)] = { $rs: $rs, row: i };
 					} else if (rsGroup > -1) {
-						$(rowCache[i]).attr(groupAttrib, rsGroup);
+						$row.attr(groupAttrib, rsGroup);
 					}
-				});
+				}
 				
 				// Find nodes that shall be used for matching
 				var t = ifNonEmptyString(options.selector, function() {
-					return $(rowCache[i]).find(options.selector);
-				}) || $(rowCache[i]);
+					return $row.find(options.selector);
+				}) || $row;
 				
 				// Gather contents of all nodes (including the rowspan, possibly from a previous row)
 				var text = rsText;
