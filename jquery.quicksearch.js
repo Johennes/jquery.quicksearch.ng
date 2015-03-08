@@ -261,27 +261,31 @@
 				rowcache = rowcache.not(options.noResults);
 			});
 			
-			var t = e.doIfString(options.selector, function() {
-				return rowcache.find(options.selector);
-			}) || rowcache;
-			
 			textcache = [];
 			var rs_text = ""
-			for (var i = 0, len = t.length; i < len; ++i) {
-				var text = t[i].innerHTML;
-				
+			
+			for (var i = 0, len = rowcache.length; i < len; ++i) {
+				// Check if there is a rowspan. If so, remember its contents.
 				e.doIfString(options.rowspanselector, function() {
-					var rs = $(t[i]).find(options.rowspanselector);
-					if (rs.length !== 0) {
-						rs_text = rs[0].innerHTML;
+					var $rs = $(rowcache[i]).find(options.rowspanselector);
+					if ($rs.length !== 0) {
+						rs_text = $rs[0].innerHTML;
 					}
-					text = rs_text + text;
 				});
+				
+				// Find nodes that shall be used for matching
+				var t = e.doIfString(options.selector, function() {
+					return $(rowcache[i]).find(options.selector);
+				}) || $(rowcache[i]);
+				
+				// Gather contents of all nodes (including the rowspan, possibly from a previous row)
+				var text = rs_text;
+				for (var j = 0, t_len = t.length; j < t_len; ++j) {
+					text += t[j].innerHTML;
+				}
 				
 				textcache.push(e.strip_html(text));
 			}
-			
-			// TODO: Make sure that rowcache and textcache have the same number 
 
 			/*
 			 * Modified fix for sync-ing "val". 
