@@ -1,12 +1,12 @@
 (function($, window, document, undefined) {
 	
 	$.fn.quicksearch = function (target, opt) {
-		var timeout, textcache, rowcache, rowspancache, val = "",
+		var timeout, textCache, rowCache, rowSpanCache, val = "",
 			e = this, groupAttrib = "data-quicksearch-group",
 			options = $.extend({ 
 				delay: 100,
 				selector: null,
-				rowspanselector: null,
+				rowSpanSelector: null,
 				stripeRows: null,
 				loader: null,
 				noResults: "",
@@ -53,65 +53,65 @@
 		this.go = function () {
 			var i = 0,
 				numMatchedRows = 0,
-				noresults = true, 
+				noResults = true, 
 				query = options.prepareQuery(val),
-				val_empty = (val.replace(" ", "").length === 0);
+				valEmpty = (val.replace(" ", "").length === 0);
 			
-			for (var i = 0, len = rowcache.length; i < len; i++) {
-				if (val_empty || options.testQuery(query, textcache[i], rowcache[i])) {
-					noresults = false;
+			for (var i = 0, len = rowCache.length; i < len; i++) {
+				if (valEmpty || options.testQuery(query, textCache[i], rowCache[i])) {
+					noResults = false;
 					numMatchedRows++;
 					
-					if (!options.isHidden(rowcache[i])) { // Only show rows that are not visible
+					if (!options.isHidden(rowCache[i])) { // Only show rows that are not visible
 						continue;
 					}
 					
-					options.show.apply(rowcache[i]);
+					options.show.apply(rowCache[i]);
 					
-					ifNonEmptyString(options.rowspanselector, function() {
-						var group = $(rowcache[i]).attr(groupAttrib);
+					ifNonEmptyString(options.rowSpanSelector, function() {
+						var group = $(rowCache[i]).attr(groupAttrib);
 						
-						if (!rowspancache[group]) { // Now rowspan in this group
+						if (!rowSpanCache[group]) { // Now rowspan in this group
 							return;
 						}
 						
 						// Increment the group's rowspan
-						var $rs = rowspancache[group].$rs;
+						var $rs = rowSpanCache[group].$rs;
 						addToRowSpan($rs, 1);
 						
 						// Check if the rowspan is currently hidden or if any of the following
 						// rows has the rowspan. If so, we move it to the shown row.
-						if (options.isHidden(rowcache[rowspancache[group].row])
-							|| rowspancache[group].row > i) {
-							$rs.detach().prependTo($(rowcache[i]));
-							rowspancache[group].row = i;
+						if (options.isHidden(rowCache[rowSpanCache[group].row])
+							|| rowSpanCache[group].row > i) {
+							$rs.detach().prependTo($(rowCache[i]));
+							rowSpanCache[group].row = i;
 							// TODO: This will only work if the rowspan element is the first
 							// child inside the row.
 						}
 					});
 				} else {
-					if (options.isHidden(rowcache[i])) { // Only hide rows that are visible
+					if (options.isHidden(rowCache[i])) { // Only hide rows that are visible
 						continue;
 					}
 					
-					options.hide.apply(rowcache[i]);
+					options.hide.apply(rowCache[i]);
 					
-					ifNonEmptyString(options.rowspanselector, function() {
-						var group = $(rowcache[i]).attr(groupAttrib);
+					ifNonEmptyString(options.rowSpanSelector, function() {
+						var group = $(rowCache[i]).attr(groupAttrib);
 						
-						if (!rowspancache[group]) { // Now rowspan in this group
+						if (!rowSpanCache[group]) { // Now rowspan in this group
 							return;
 						}
 						
 						// Decrement the group's rowspan
-						var $rs = rowspancache[group].$rs;
+						var $rs = rowSpanCache[group].$rs;
 						addToRowSpan($rs, -1);
 						
 						// Check if this row has the rowspan. If so, we need to move it to the next visible row.
-						if (rowspancache[group].row === i) {
+						if (rowSpanCache[group].row === i) {
 							// Find next visible row
 							for (var j = i + 1; j < len; ++j) {
-								$node = $(rowcache[j]);
+								$node = $(rowCache[j]);
 								
 								if ($node.attr(groupAttrib) !== group) {
 									break; // We've reached the end of this group
@@ -126,7 +126,7 @@
 								// TODO: This will only work if the rowspan element is the first
 								// child inside the row.
 								
-								rowspancache[group].row = j;
+								rowSpanCache[group].row = j;
 								
 								break;
 							}
@@ -135,7 +135,7 @@
 				}
 			}
 			
-			if (noresults) {
+			if (noResults) {
 				this.results(false);
 			} else {
 				this.results(true);
@@ -168,15 +168,15 @@
 		this.stripe = function () {
 			if (typeof options.stripeRows === "object" && options.stripeRows !== null) {
 				var joined = options.stripeRows.join(" ");
-				var stripeRows_length = options.stripeRows.length;
+				var stripeRowsLength = options.stripeRows.length;
 				
-				rowcache.not(":hidden").each(function (i) {
-					$(this).removeClass(joined).addClass(options.stripeRows[i % stripeRows_length]);
+				rowCache.not(":hidden").each(function (i) {
+					$(this).removeClass(joined).addClass(options.stripeRows[i % stripeRowsLength]);
 				});
 				
-				ifNonEmptyString(options.rowspanselector, function() {
-					rowcache.find(options.rowspanselector).not(":hidden").each(function (i) {
-						$(this).removeClass(joined).addClass(options.stripeRows[i % stripeRows_length]);
+				ifNonEmptyString(options.rowSpanSelector, function() {
+					rowCache.find(options.rowSpanSelector).not(":hidden").each(function (i) {
+						$(this).removeClass(joined).addClass(options.stripeRows[i % stripeRowsLength]);
 					});
 				});
 			}
@@ -184,7 +184,7 @@
 			return this;
 		};
 		
-		var strip_html = function (input) {
+		var stripHtml = function (input) {
 			var output = input.replace(new RegExp("<[^<]+\>", "g"), "");
 			output = $.trim(output.toLowerCase());
 			return output;
@@ -213,47 +213,47 @@
 		};
 		
 		this.cache = function () {
-			rowcache = $(target);
+			rowCache = $(target);
 			
 			ifNonEmptyString(options.noResults, function() {
-				rowcache = rowcache.not(options.noResults);
+				rowCache = rowCache.not(options.noResults);
 			});
 			
-			textcache = [];
-			rowspancache = {};
-			var rs_text = "", rs_group = -1;
+			textCache = [];
+			rowSpanCache = {};
+			var rsText = "", rsGroup = -1;
 			
-			for (var i = 0, len = rowcache.length; i < len; ++i) {
+			for (var i = 0, len = rowCache.length; i < len; ++i) {
 				// Check if there is a rowspan
-				ifNonEmptyString(options.rowspanselector, function() {
-					var $rs = $(rowcache[i]).find(options.rowspanselector);
+				ifNonEmptyString(options.rowSpanSelector, function() {
+					var $rs = $(rowCache[i]).find(options.rowSpanSelector);
 					if ($rs.length !== 0) {
-						rs_text = $rs[0].innerHTML;
-						++rs_group;
+						rsText = $rs[0].innerHTML;
+						++rsGroup;
 						
-						$(rowcache[i]).attr(groupAttrib, rs_group);
+						$(rowCache[i]).attr(groupAttrib, rsGroup);
 						
-						rowspancache[$(rowcache[i]).attr(groupAttrib)] = {
+						rowSpanCache[$(rowCache[i]).attr(groupAttrib)] = {
 							$rs: $rs,
 							row: i
 						};
-					} else if (rs_group > -1) {
-						$(rowcache[i]).attr(groupAttrib, rs_group);
+					} else if (rsGroup > -1) {
+						$(rowCache[i]).attr(groupAttrib, rsGroup);
 					}
 				});
 				
 				// Find nodes that shall be used for matching
 				var t = ifNonEmptyString(options.selector, function() {
-					return $(rowcache[i]).find(options.selector);
-				}) || $(rowcache[i]);
+					return $(rowCache[i]).find(options.selector);
+				}) || $(rowCache[i]);
 				
 				// Gather contents of all nodes (including the rowspan, possibly from a previous row)
-				var text = rs_text;
+				var text = rsText;
 				for (var j = 0, t_len = t.length; j < t_len; ++j) {
 					text += t[j].innerHTML;
 				}
 				
-				textcache.push(strip_html(text));
+				textCache.push(stripHtml(text));
 			}
 
 			/*
