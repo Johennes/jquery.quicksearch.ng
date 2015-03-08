@@ -39,6 +39,28 @@ however.
 		selector: 'th'
 	});
 
+#### Example for Table with Rowspan
+
+	<input type="text" id="search">
+	
+	<table>
+		<tr>
+			<th rowspan="3">Germany</th>
+			<td>Berlin</td>
+		</tr>
+		<tr>
+			<td>Hamburg</td>
+		</tr>
+		<tr>
+			<td>Munich</td>
+		</tr>
+	</table>
+		
+	$('input#search').quicksearch('table tr', {
+		selector: 'td',
+		rowSpanSelector: 'th'
+	});
+
 #### Example for Dynamic Elements
 
 	var qs = $('input#id_search_list').quicksearch('ul#list_example li');
