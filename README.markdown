@@ -1,20 +1,16 @@
-# jQuery quicksearch plug-in
+# jQuery Quicksearch Plugin
 
-A [jQuery][jquery_site] based plug-in for filtering large data sets with user input
-
-## Examples
-
-* <http://www.lomalogue.com/jquery/quicksearch/>
-* <http://www.lomalogue.com/jquery/quicksearch/super_table.html>
+This is a fork of the [jQuery][jquery_site] [quicksearch plugin][original_repo],
+originally written by Rik Lomas. The plugin was extend to handle tables with
+a row span on the first column. Since Rik does not seem to accept pull requests
+anymore, I don't intend to merge these changes back into the original repository,
+however.
 
 ## Usage
 
-Note that the usage has changed in the latest version of quicksearch, the code is *not* backwards compatible,
-the form and input are not build by the script any more.
-
 	$(input_selector).quicksearch(elements_to_search, options);
 
-#### Example on table rows
+#### Example for Table Rows
 
 	/* Example form */
 	<form>
@@ -37,19 +33,19 @@ the form and input are not build by the script any more.
 		$('input#search').quicksearch('table tbody tr');
 	</script>
 
-#### Example on the `<th>` elements on a table row
+#### Example for `<th>` Elements in a Table Row
 
 	$('input#search').quicksearch('table tbody tr', {
 		selector: 'th'
 	});
 
-#### Example of how to use with JS
+#### Example for Dynamic Elements
 
 	var qs = $('input#id_search_list').quicksearch('ul#list_example li');
 	$('ul#list_example').append('<li>Loaded with Ajax</li>');
 	qs.cache();
 
-#### Example of how to use with Ajax
+#### Example of How to Use with AJAX
 
 	var qs = $('input#search').quicksearch('table tbody tr');
 	$.ajax({
@@ -67,6 +63,8 @@ the form and input are not build by the script any more.
 	Delay of trigger in milliseconds
 *	#### selector
 	A query selector on sibling elements to test
+*	#### rowSpanSelector
+	A query selector to find the element with rowspan within a row
 *	#### stripeRows
 	An array of class names to go on each row
 *	#### loader
@@ -91,7 +89,6 @@ the form and input are not build by the script any more.
 	- query prepared by 'prepareQuery'
 	- stripped text from 'selector'
 	- element to be potentially hidden
-
 
 For example:
 
@@ -122,38 +119,9 @@ For example:
 		}
 	});
 
-## Help make quicksearch better!
-
-If you have a bug fix, the best way to help would be to:
-
-* Fork the project by clicking "Fork this project" at the top of this page
-* Clone your version of quicksearch from your Github account to your computer
-* Fix and commit the bugs, then push your version to your Github account
-* Click "pull request" at the top of my Github page
-
-I can't promise to answer every question about quicksearch, 
-but please do [report bugs here][issues] or [send me a message on Github][mail_me]. 
-
-You can [watch quicksearch][github_watch] for updates or [follow me on Github][github_follow] 
-and [on Twitter][twitter_follow].
-
 ## License
 
-Under the same licenses as the jQuery library itself: <http://docs.jquery.com/License>
-
-## Credits
-
-jQuery quicksearch is made by [Rik Lomas][rik_site] at [Lomalogue][lomalogue_site]
-
-Thanks to [Seth F.][thelizardreborn] for fixes and [Krzysiek Goj][goj] for the  testQuery and prepareQuery option updates
+This plugin is released under the same licenses as the jQuery library itself: <http://docs.jquery.com/License>
 
 [jquery_site]: http://www.jquery.com
-[rik_site]: http://www.riklomas.co.uk
-[lomalogue_site]: http://www.lomalogue.com
-[issues]: http://github.com/riklomas/quicksearch/issues
-[mail_me]: http://github.com/inbox/new/riklomas
-[github_watch]: http://github.com/riklomas/quicksearch/toggle_watch
-[github_follow]: http://github.com/users/follow?target=riklomas
-[twitter_follow]: http://twitter.com/riklomas
-[thelizardreborn]: http://github.com/thelizardreborn
-[goj]: http://github.com/goj
+[original_repo]: https://github.com/riklomas/quicksearch
