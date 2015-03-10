@@ -139,7 +139,7 @@
 			if (rowSpanCache[group].row === rowIndex) {
 				// Find next visible row
 				for (var j = rowIndex + 1, len = rowCache.length; j < len; ++j) {
-					$node = $(rowCache[j]);
+					var $node = $(rowCache[j]);
 					
 					if ($node.attr(groupAttrib) !== group) {
 						break; // We've reached the end of this group
@@ -159,7 +159,7 @@
 					break;
 				}
 			}
-		}
+		};
 		
 		/*
 		 * External API so that users can perform search programatically. 
