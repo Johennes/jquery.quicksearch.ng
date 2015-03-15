@@ -19,6 +19,14 @@
 					stripeRows: ['odd', 'even'],
 					loader: '#group_row_loader'
 				});
+
+				$("#rs_cs_filter").quicksearch("#rs_cs_table tbody tr", {
+					rowSpanSelector: 'th',
+					groupRowSelector: 'th',
+					noResults: '#rs_cs_noresults',
+					stripeRows: ['odd', 'even'],
+					loader: '#rs_cs_loader'
+				});
 			});
 		</script>
 		<link rel="stylesheet" href="style.css" type="text/css" media="all" title="" />
@@ -297,6 +305,169 @@
 				<tr>
 					<td>San Francisco</td>
 					<td>0.837</td>
+				</tr>
+				<tr>
+					<td>Seattle</td>
+					<td>0.652</td>
+				</tr>
+				<tr>
+					<td>Washington</td>
+					<td>0.659</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<form action="#">
+			<fieldset>
+				<input type="text" name="rs_cs_filter" value="" id="rs_cs_filter" placeholder="Filter..."/>
+				<span id="rs_cs_loader" class="loading">Loading...</span>
+			</fieldset>
+		</form>
+		<table id="rs_cs_table" cellpadding="0" cellspacing="0">
+			<thead>
+				<tr>
+					<th width="60%">Country</th>
+					<th width="20%">City</th>
+					<th width="10%">Population [Millions]</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr id="rs_cs_noresults">
+					<td colspan="3">No Results</td>
+				</tr>
+				<tr>
+					<th rowspan="11">Germany</th>
+					<th colspan="2">East</th>
+				</tr>
+				<tr>
+					<td>Berlin</td>
+					<td>3.502</td>
+				</tr>
+				<tr>
+					<td>Dresden</td>
+					<td>0.530</td>
+				</tr>
+				<tr>
+					<td>Leipzig</td>
+					<td>0.532</td>
+				</tr>
+				<tr>
+					<td>Potsdam</td>
+					<td>0.159</td>
+				</tr>
+				<tr>
+					<td>Rostock</td>
+					<td>0.204</td>
+				</tr>
+				<tr>
+					<th colspan="2">West</th>
+				</tr>
+				<tr>
+					<td>Cologne</td>
+					<td>1.017</td>
+				</tr>
+				<tr>
+					<td>Hamburg</td>
+					<td>1.799</td>
+				</tr>
+					<td>Munich</td>
+					<td>1.378</td>
+				</tr>
+				<tr>
+					<td>Stuttgart</td>
+					<td>0.613</td>
+				</tr>
+				<tr>
+					<th rowspan="12">United Kingdom</th>
+					<th colspan="2">England</th>
+				</tr>
+				<tr>
+					<td>Bristol</td>
+					<td>0.428</td>
+				</tr>
+				<tr>
+					<td>Dover</td>
+					<td>0.037</td>
+				</tr>
+				<tr>
+					<td>Leicester</td>
+					<td>0.330</td>
+				</tr>
+				<tr>
+					<td>Liverpool</td>
+					<td>0.466</td>
+				</tr>
+				<tr>
+					<td>London</td>
+					<td>8.308</td>
+				</tr>
+				<tr>
+					<td>Manchester</td>
+					<td>0.502</td>
+				</tr>
+				<tr>
+					<th colspan="2">Scotland</th>
+				</tr>
+				<tr>
+					<td>Edinburgh</td>
+					<td>0.495</td>
+				</tr>
+				<tr>
+					<td>Glasgow</td>
+					<td>0.599</td>
+				</tr>
+				<tr>
+					<th colspan="2">Wales</th>
+				</tr>
+				<tr>
+					<td>Cardiff</td>
+					<td>0.325</td>
+				</tr>
+				<tr>
+					<th rowspan="14">USA</th>
+					<th colspan="2">California</th>
+				</tr>
+				<tr>
+					<td>Los Angeles</td>
+					<td>16.370</td>
+				</tr>
+				<tr>
+					<td>San Francisco</td>
+					<td>0.837</td>
+				</tr>
+				<tr>
+					<th colspan="2">Texas</th>
+				</tr>
+				<tr>
+					<td>Austin</td>
+					<td>0.885</td>
+				</tr>
+				<tr>
+					<td>Houston</td>
+					<td>2.196</td>
+				</tr>
+				<tr>
+					<th colspan="2">Other States</th>
+				</tr>
+				<tr>
+					<td>Boston</td>
+					<td>0.646</td>
+				</tr>
+				<tr>
+					<td>Chicago</td>
+					<td>2.719</td>
+				</tr>
+				<tr>
+					<td>Detroit</td>
+					<td>0.689</td>
+				</tr>
+				<tr>
+					<td>Miami</td>
+					<td>0.418</td>
+				</tr>
+				<tr>
+					<td>New York</td>
+					<td>8.406</td>
 				</tr>
 				<tr>
 					<td>Seattle</td>
