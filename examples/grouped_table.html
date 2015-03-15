@@ -21,8 +21,8 @@
 				});
 
 				$("#rs_cs_filter").quicksearch("#rs_cs_table tbody tr", {
-					rowSpanSelector: 'th',
-					groupRowSelector: 'th',
+					rowSpanSelector: 'th[rowspan]',
+					groupRowSelector: 'th[colspan]',
 					noResults: '#rs_cs_noresults',
 					stripeRows: ['odd', 'even'],
 					loader: '#rs_cs_loader'

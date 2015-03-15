@@ -189,7 +189,11 @@
             ++colSpanCache[group].rows;
 
             if (colSpanCache[group].rows === 1 && colSpanCache[group].$cs) {
-                colSpanCache[group].$cs.show();
+                colSpanCache[group].$cs.parent().show();
+
+                if (handleRowSpan) {
+                    handleRowSpanOnShow(colSpanCache[group].row);
+                }
             }
         };
 
@@ -200,7 +204,11 @@
             --colSpanCache[group].rows;
 
             if (colSpanCache[group].rows === 0 && colSpanCache[group].$cs) {
-                colSpanCache[group].$cs.hide();
+                colSpanCache[group].$cs.parent().hide();
+
+                if (handleRowSpan) {
+                    handleRowSpanOnHide(colSpanCache[group].row);
+                }
             }
         };
 
@@ -309,10 +317,10 @@
                     var $cs = $row.find(options.groupRowSelector);
                     if ($cs.length !== 0) {
                         ++csGroup;
-                        colSpanCache[csGroup] = { $cs: $cs, rows: 0 };
+                        colSpanCache[csGroup] = { $cs: $cs, row: i, rows: 0 };
                     } else {
                         if (colSpanCache[csGroup] === undefined) {
-                            colSpanCache[csGroup] = { $cs: null, rows: 0 };
+                            colSpanCache[csGroup] = { $cs: null, row: i, rows: 0 };
                         } else {
                             colSpanCache[csGroup].rows += 1;
                         }
