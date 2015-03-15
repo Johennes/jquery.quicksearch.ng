@@ -13,6 +13,7 @@
                 delay: 100,
                 selector: null,
                 rowSpanSelector: null,
+                includeRowSpanText: false,
                 stripeRows: null,
                 loader: null,
                 noResults: "",
@@ -242,6 +243,7 @@
 
             for (var i = 0, len = rowCache.length; i < len; ++i) {
                 var $row = $(rowCache[i]);
+                var text = "";
 
                 if (handleRowSpan) { // Check if there is a rowspan
                     var $rs = $row.find(options.rowSpanSelector);
@@ -253,6 +255,7 @@
 
                         rowSpanCache[$row.attr(groupAttrib)] = { $rs: $rs, row: i };
                     } else if (rsGroup > -1) {
+                        text = rsText;
                         $row.attr(groupAttrib, rsGroup);
                     }
                 }
@@ -261,7 +264,6 @@
                 var t = findNodes($row);
 
                 // Gather contents of all nodes (including the rowspan, possibly from a previous row)
-                var text = rsText;
                 for (var j = 0, t_len = t.length; j < t_len; ++j) {
                     text += t[j].innerHTML;
                 }
