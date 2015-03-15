@@ -71,6 +71,11 @@
                         continue;
                     }
 
+                    // Ignore group rows
+                    if (handleGroupRows && $(rowCache[i]).find(options.groupRowSelector).length !== 0) {
+                        continue;
+                    }
+
                     options.show.apply(rowCache[i]);
 
                     if (handleRowSpan) {
@@ -82,6 +87,11 @@
                     }
                 } else {
                     if (options.isHidden(rowCache[i])) { // Only hide rows that are visible
+                        continue;
+                    }
+
+                    // Ignore group rows
+                    if (handleGroupRows && $(rowCache[i]).find(options.groupRowSelector).length !== 0) {
                         continue;
                     }
 
