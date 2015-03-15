@@ -76,6 +76,10 @@
                     if (handleRowSpan) {
                         handleRowSpanOnShow(i);
                     }
+
+                    if (handleGroupRows) {
+                        handleGroupRowsOnShow();
+                    }
                 } else {
                     if (options.isHidden(rowCache[i])) { // Only hide rows that are visible
                         continue;
@@ -85,6 +89,10 @@
 
                     if (handleRowSpan) {
                         handleRowSpanOnHide(i);
+                    }
+
+                    if (handleGroupRows) {
+                        handleGroupRowsOnHide();
                     }
                 }
             }
@@ -162,6 +170,34 @@
                     break;
                 }
             }
+        };
+
+        var handleGroupRowsOnShow = function(rowIndex) {
+            var $row = $(rowCache[rowIndex]);
+            var group = $row.attr(colSpanGroupAttrib);
+
+            var $groupElements = $row.parent().find('[' + colSpanGroupAttrib + '=' + group + ']').not(':hidden');
+            if ($groupElements.length === 1) {
+                $row.parent().find('[' + colSpanGroupAttrib + '=' + group + ']').show();
+            }
+
+            console.log(group);
+            console.log($row);
+            console.log($groupElements);
+
+        };
+
+        var handleGroupRowsOnHide = function(rowIndex) {
+            var group = $(rowCache[rowIndex]).attr(colSpanGroupAttrib);
+
+            var $groupElements = $row.parent().find('[' + colSpanGroupAttrib + '=' + group + ']').not(':hidden');
+            if ($groupElements.length === 1) {
+                $row.parent().find('[' + colSpanGroupAttrib + '=' + group + ']').hide();
+            }
+
+            console.log(group);
+            console.log($row);
+            console.log($groupElements);
         };
 
         /*
@@ -268,7 +304,7 @@
                     if ($cs.length !== 0) {
                         ++csGroup;
                     }
-                    
+
                     $row.attr(colSpanGroupAttrib, csGroup);
                 }
 
