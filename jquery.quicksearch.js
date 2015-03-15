@@ -7,7 +7,7 @@
             }
         };
 
-        var timeout, textCache, rowCache, rowSpanCache, val = "",
+        var timeout, textCache, rowCache, rowSpanCache, colSpanCache, val = "",
             e = this, rowSpanGroupAttrib = "data-quicksearch-rowspan-group",
             colSpanGroupAttrib = "data-quicksearch-colspan-group",
             options = $.extend({
@@ -186,29 +186,22 @@
             var $row = $(rowCache[rowIndex]);
             var group = $row.attr(colSpanGroupAttrib);
 
-            var $groupElements = $row.parent().find('[' + colSpanGroupAttrib + '=' + group + ']').not(':hidden');
-            if ($groupElements.length === 1) {
-                $row.parent().find('[' + colSpanGroupAttrib + '=' + group + ']').show();
+            ++colSpanCache[group].rows;
+
+            if (colSpanCache[group].rows === 1 && colSpanCache[group].$cs) {
+                colSpanCache[group].$cs.show();
             }
-
-            console.log(group);
-            console.log($row);
-            console.log($groupElements);
-
         };
 
         var handleGroupRowsOnHide = function(rowIndex) {
             var $row = $(rowCache[rowIndex]);
             var group = $row.attr(colSpanGroupAttrib);
 
-            var $groupElements = $row.parent().find('[' + colSpanGroupAttrib + '=' + group + ']').not(':hidden');
-            if ($groupElements.length === 1) {
-                $row.parent().find('[' + colSpanGroupAttrib + '=' + group + ']').hide();
-            }
+            --colSpanCache[group].rows;
 
-            console.log(group);
-            console.log($row);
-            console.log($groupElements);
+            if (colSpanCache[group].rows === 0 && colSpanCache[group].$cs) {
+                colSpanCache[group].$cs.hide();
+            }
         };
 
         /*
@@ -283,6 +276,8 @@
 
             textCache = [];
             rowSpanCache = {};
+            colSpanCache = {};
+
             var rsText = "", rsGroup = -1, csGroup = -1;
 
             var findNodes =  function($row) {
@@ -314,6 +309,13 @@
                     var $cs = $row.find(options.groupRowSelector);
                     if ($cs.length !== 0) {
                         ++csGroup;
+                        colSpanCache[csGroup] = { $cs: $cs, rows: 0 };
+                    } else {
+                        if (colSpanCache[csGroup] === undefined) {
+                            colSpanCache[csGroup] = { $cs: null, rows: 0 };
+                        } else {
+                            colSpanCache[csGroup].rows += 1;
+                        }
                     }
 
                     $row.attr(colSpanGroupAttrib, csGroup);
