@@ -1,6 +1,6 @@
 (function($, window, document, undefined) {
 
-    $.fn.quicksearch = function (target, opt) {
+    $.fn.quicksearch = function (target, opts) {
         var ifNonEmptyString = function(arg, callback) {
             if (typeof arg === "string" && arg !== "") {
                 return callback();
@@ -47,7 +47,7 @@
                     }
                     return true;
                 }
-            }, opt);
+            }, opts);
 
         var handleRowSpan = ifNonEmptyString(options.rowSpanSelector, function() { return true; }) || false;
         var handleGroupRows = ifNonEmptyString(options.groupRowSelector, function() { return true; }) || false;
@@ -78,7 +78,7 @@
                     }
 
                     if (handleGroupRows) {
-                        handleGroupRowsOnShow();
+                        handleGroupRowsOnShow(i);
                     }
                 } else {
                     if (options.isHidden(rowCache[i])) { // Only hide rows that are visible
@@ -92,7 +92,7 @@
                     }
 
                     if (handleGroupRows) {
-                        handleGroupRowsOnHide();
+                        handleGroupRowsOnHide(i);
                     }
                 }
             }
@@ -188,7 +188,8 @@
         };
 
         var handleGroupRowsOnHide = function(rowIndex) {
-            var group = $(rowCache[rowIndex]).attr(colSpanGroupAttrib);
+            var $row = $(rowCache[rowIndex]);
+            var group = $row.attr(colSpanGroupAttrib);
 
             var $groupElements = $row.parent().find('[' + colSpanGroupAttrib + '=' + group + ']').not(':hidden');
             if ($groupElements.length === 1) {
