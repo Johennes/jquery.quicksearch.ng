@@ -8,12 +8,14 @@
         };
 
         var timeout, textCache, rowCache, rowSpanCache, val = "",
-            e = this, groupAttrib = "data-quicksearch-group",
+            e = this, rowSpanGroupAttrib = "data-quicksearch-rowspan-group",
+            colSpanGroupAttrib = "data-quicksearch-colspan-group",
             options = $.extend({
                 delay: 100,
                 selector: null,
                 rowSpanSelector: null,
                 includeRowSpanText: false,
+                groupRowSelector: null,
                 stripeRows: null,
                 loader: null,
                 noResults: "",
@@ -48,6 +50,7 @@
             }, opt);
 
         var handleRowSpan = ifNonEmptyString(options.rowSpanSelector, function() { return true; }) || false;
+        var handleGroupRows = ifNonEmptyString(options.groupRowSelector, function() { return true; }) || false;
 
         var addToRowSpan = function($node, amount) {
             $node.attr("rowspan", parseInt($node.attr("rowspan")) + amount);
@@ -102,7 +105,7 @@
 
         var handleRowSpanOnShow = function(rowIndex) {
             var $row = $(rowCache[rowIndex]),
-                group = $row.attr(groupAttrib);
+                group = $row.attr(rowSpanGroupAttrib);
 
             if (!rowSpanCache[group]) { // Now rowspan in this group
                 return;
@@ -125,7 +128,7 @@
         };
 
         var handleRowSpanOnHide = function(rowIndex) {
-            var group = $(rowCache[rowIndex]).attr(groupAttrib);
+            var group = $(rowCache[rowIndex]).attr(rowSpanGroupAttrib);
 
             if (!rowSpanCache[group]) { // Now rowspan in this group
                 return;
@@ -141,7 +144,7 @@
                 for (var j = rowIndex + 1, len = rowCache.length; j < len; ++j) {
                     var $node = $(rowCache[j]);
 
-                    if ($node.attr(groupAttrib) !== group) {
+                    if ($node.attr(rowSpanGroupAttrib) !== group) {
                         break; // We've reached the end of this group
                     }
 
@@ -233,7 +236,7 @@
 
             textCache = [];
             rowSpanCache = {};
-            var rsText = "", rsGroup = -1;
+            var rsText = "", rsGroup = -1, csGroup = -1;
 
             var findNodes =  function($row) {
                 return ifNonEmptyString(options.selector, function() {
@@ -251,13 +254,22 @@
                         rsText = $rs[0].innerHTML;
                         ++rsGroup;
 
-                        $row.attr(groupAttrib, rsGroup);
+                        $row.attr(rowSpanGroupAttrib, rsGroup);
 
-                        rowSpanCache[$row.attr(groupAttrib)] = { $rs: $rs, row: i };
+                        rowSpanCache[$row.attr(rowSpanGroupAttrib)] = { $rs: $rs, row: i };
                     } else if (rsGroup > -1) {
                         text = rsText;
-                        $row.attr(groupAttrib, rsGroup);
+                        $row.attr(rowSpanGroupAttrib, rsGroup);
                     }
+                }
+
+                if (handleGroupRows) {
+                    var $cs = $row.find(options.groupRowSelector);
+                    if ($cs.length !== 0) {
+                        ++csGroup;
+                    }
+                    
+                    $row.attr(colSpanGroupAttrib, csGroup);
                 }
 
                 // Find nodes that shall be used for matching
