@@ -7,14 +7,14 @@
 		<script type="text/javascript">
 			$(document).ready(function () {
 				$("#id_search").quicksearch("table tbody tr", {
-					rowSpanSelector: 'th',
+					rowSpanSelector: 'th[rowspan]',
 					noResults: '#noresults',
 					stripeRows: ['odd', 'even'],
 					loader: 'span.loading'
 				});
 
 				$("#group_row_filter").quicksearch("#group_row_table tbody tr", {
-					groupRowSelector: 'th',
+					groupRowSelector: 'th[colspan]',
 					noResults: '#group_row_noresults',
 					stripeRows: ['odd', 'even'],
 					loader: '#group_row_loader'
