@@ -1,4 +1,5 @@
-# jQuery Quicksearch Plugin
+jQuery Quicksearch Plugin
+=========================
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -8,15 +9,15 @@ a row span on the first column. Since Rik does not seem to accept pull requests
 anymore, I don't intend to merge these changes back into the original repository,
 however.
 
-## Usage
+### Usage
 
-``` javascript
+```javascript
 $(input_selector).quicksearch(elements_to_search, options);
 ```
 
 #### Example for Table Rows
 
-``` html
+```html
 /* Example form */
 <form>
 	<input type="text" id="search">
@@ -41,7 +42,7 @@ $(input_selector).quicksearch(elements_to_search, options);
 
 #### Example for `<th>` Elements in a Table Row
 
-``` javascript
+```javascript
 $('input#search').quicksearch('table tbody tr', {
 	selector: 'th'
 });
@@ -49,7 +50,7 @@ $('input#search').quicksearch('table tbody tr', {
 
 #### Example for Table with Rowspan
 
-``` html
+```html
 <input type="text" id="search">
 
 <table>
@@ -75,7 +76,7 @@ $('input#search').quicksearch('table tbody tr', {
 
 #### Example for Dynamic Elements
 
-``` javascript
+```javascript
 var qs = $('input#id_search_list').quicksearch('ul#list_example li');
 $('ul#list_example').append('<li>Loaded with Ajax</li>');
 qs.cache();
@@ -95,7 +96,7 @@ $.ajax({
 });
 ```
 
-## Options
+### Options
 
 * 	#### delay
 	Delay of trigger in milliseconds
@@ -130,7 +131,7 @@ $.ajax({
 
 For example:
 
-``` javascript
+```javascript
 $('input#search').quicksearch('table tbody tr', {
 	'delay': 100,
 	'selector': 'th',
