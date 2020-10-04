@@ -1,8 +1,6 @@
 jQuery Quicksearch Plugin
 =========================
 
-*Mirrors: [GitHub] ~ [GitLab]*
-
 This is a fork of the [jQuery][jquery_site] [quicksearch plugin][original_repo],
 originally written by Rik Lomas. The plugin was extend to handle tables with
 a row span on the first column. Since Rik does not seem to accept pull requests
@@ -162,5 +160,3 @@ $('input#search').quicksearch('table tbody tr', {
 
 [jquery_site]: http://www.jquery.com
 [original_repo]: https://github.com/riklomas/quicksearch
-[GitHub]: https://github.com/Johennes/jquery.quicksearch.ng
-[GitLab]: https://gitlab.com/cherrypicker/jquery-quicksearch-ng
